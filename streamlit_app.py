@@ -1,5 +1,5 @@
 import streamlit as st
-import pd
+import pandas as pd
 import time
 
 st.set_page_config(page_title="Le Quiz de la Soirée", layout="centered")
@@ -7,7 +7,7 @@ st.set_page_config(page_title="Le Quiz de la Soirée", layout="centered")
 # --- LE CERVEAU COMMUN (PARTAGÉ) ---
 @st.cache_resource
 def get_leaderboard():
-    return {} # Un dictionnaire vide qui sera rempli par tout le monde
+    return {} # Un dictionnaire partagé entre tous les joueurs
 
 leaderboard = get_leaderboard()
 
@@ -19,7 +19,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Variables individuelles (privées)
+# Variables individuelles
 if 'question_index' not in st.session_state:
     st.session_state.question_index = 0
 if 'total_points' not in st.session_state:
@@ -29,7 +29,7 @@ if 'pseudo' not in st.session_state:
 if 'timer' not in st.session_state:
     st.session_state.timer = time.time()
 
-# --- TES QUESTIONS ---
+# --- QUESTIONS ---
 quiz_data = [
     {"q": "Quelle est la capitale de l'Islande ?", "a": ["Oslo", "Reykjavik", "Helsinki"], "c": "Reykjavik"},
     {"q": "Combien de coeurs a une pieuvre ?", "a": ["1", "3", "8"], "c": "3"},
@@ -66,16 +66,17 @@ else:
                 st.session_state.timer = time.time()
                 st.rerun()
     else:
-        # ON ENREGISTRE DANS LE CERVEAU COMMUN
+        # ON ENREGISTRE DANS LE TABLEAU COMMUN
         leaderboard[st.session_state.pseudo] = st.session_state.total_points
         
         st.balloons()
         st.header("🏁 Classement Général")
         
-        # Affichage du tableau de tout le monde
-        df = pd.DataFrame(leaderboard.items(), columns=['Joueur', 'Points'])
+        # Création du tableau avec les scores de TOUT LE MONDE
+        df = pd.DataFrame(list(leaderboard.items()), columns=['Joueur', 'Points'])
         df = df.sort_values(by='Points', ascending=False)
         st.table(df)
         
+        st.write("👉 *Si un score manque, cliquez sur le bouton ci-dessous :*")
         if st.button("Rafraîchir le classement 🔄"):
             st.rerun()
