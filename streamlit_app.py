@@ -1,21 +1,21 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Le Quiz de la Bande", layout="centered")
+st.set_page_config(page_title="Le Quiz des Champions", layout="centered")
 
 # --- STYLE ---
 st.markdown("""
     <style>
-    .stButton>button { width: 100%; height: 50px; border-radius: 10px; font-size: 18px; }
-    .score-box { padding: 20px; background-color: #f0f2f6; border-radius: 15px; text-align: center; }
+    .stButton>button { width: 100%; height: 55px; border-radius: 12px; font-size: 18px; font-weight: bold; background-color: #f0f2f6; }
+    .score-box { padding: 25px; background-color: #e8f0fe; border-radius: 20px; text-align: center; border: 2px solid #4285f4; }
     </style>
 """, unsafe_allow_html=True)
 
-# Initialisation du "Tableau des scores" global (partagé par tous les utilisateurs)
+# Mémoire commune pour les 3 joueurs
 if 'global_scores' not in st.session_state:
     st.session_state.global_scores = {}
 
-# Variables individuelles
+# Variables par joueur
 if 'question_index' not in st.session_state:
     st.session_state.question_index = 0
 if 'my_score' not in st.session_state:
@@ -23,25 +23,25 @@ if 'my_score' not in st.session_state:
 if 'pseudo' not in st.session_state:
     st.session_state.pseudo = ""
 
-# --- QUESTIONS ---
+# --- TES QUESTIONS ---
 quiz_data = [
-    {"q": "Quel pays a inventé les frites ?", "a": ["France", "Belgique", "USA"], "c": "Belgique"},
-    {"q": "Quelle planète est surnommée la planète rouge ?", "a": ["Vénus", "Jupiter", "Mars"], "c": "Mars"},
-    {"q": "Combien de cœurs possède une pieuvre ?", "a": ["1", "3", "8"], "c": "3"}
+    {"q": "Qui a peint la Joconde ?", "a": ["Van Gogh", "Picasso", "Léonard de Vinci"], "c": "Léonard de Vinci"},
+    {"q": "Quelle est la capitale de l'Islande ?", "a": ["Oslo", "Reykjavik", "Helsinki"], "c": "Reykjavik"},
+    {"q": "Quel groupe chante 'Bohemian Rhapsody' ?", "a": ["The Beatles", "Queen", "U2"], "c": "Queen"}
 ]
 
-st.title("🥇 Compétition Quiz")
+st.title("🏆 Le Quiz de la Soirée")
 
-# 1. ÉTAPE PSEUDO
+# ETAPE 1 : CHOIX DU NOM
 if st.session_state.pseudo == "":
-    st.write("### Bienvenue ! Entrez votre nom pour commencer :")
-    nom = st.text_input("Pseudo", placeholder="Ex: Jean-Mi, Ma Chérie...")
-    if st.button("Valider et Jouer"):
+    st.write("### 👋 Salut ! Entrez votre pseudo :")
+    nom = st.text_input("", placeholder="Ton prénom ici...")
+    if st.button("Lancer le Quiz !"):
         if nom:
             st.session_state.pseudo = nom
             st.rerun()
 else:
-    # 2. LE QUIZ
+    # ETAPE 2 : LE QUIZ
     if st.session_state.question_index < len(quiz_data):
         current_q = quiz_data[st.session_state.question_index]
         st.write(f"Joueur : **{st.session_state.pseudo}**")
@@ -52,34 +52,36 @@ else:
         for option in current_q['a']:
             if st.button(option):
                 if option == current_q['c']:
-                    st.toast("Correct !", icon="✅")
+                    st.toast("Bravo ! ✅")
                     st.session_state.my_score += 1
                 else:
-                    st.toast("Faux...", icon="❌")
-                
+                    st.toast("Raté... ❌")
                 st.session_state.question_index += 1
                 st.rerun()
 
-    # 3. LE RÉSULTAT FINAL ET CLASSEMENT
+    # ETAPE 3 : FIN ET MUSIQUE
     else:
-        # Enregistrement du score final dans la session globale
+        # On enregistre le score
         st.session_state.global_scores[st.session_state.pseudo] = st.session_state.my_score
         
         st.balloons()
-        st.header("🏁 Quiz Terminé !")
+        st.header("🏁 C'est fini !")
         
-        st.markdown(f"<div class='score-box'><h2>Ton score : {st.session_state.my_score} / {len(quiz_data)}</h2></div>", unsafe_allow_html=True)
+        # MUSIQUE DE VICTOIRE (Intégrée via un lien public pour éviter l'upload)
+        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+        st.caption("🎶 Petite musique pour fêter ça !")
+
+        st.markdown(f"<div class='score-box'><h2>Ton score final : {st.session_state.my_score} / {len(quiz_data)}</h2></div>", unsafe_allow_html=True)
         
         st.write("---")
-        st.subheader("📊 Classement des joueurs")
+        st.subheader("📊 Classement en direct")
         
-        # Affichage des scores de tout le monde sous forme de tableau
         if st.session_state.global_scores:
             df = pd.DataFrame(st.session_state.global_scores.items(), columns=['Joueur', 'Points'])
             df = df.sort_values(by='Points', ascending=False)
             st.table(df)
         
-        if st.button("🔄 Recommencer"):
+        if st.button("🔄 Rejouer"):
             st.session_state.question_index = 0
             st.session_state.my_score = 0
             st.rerun()
