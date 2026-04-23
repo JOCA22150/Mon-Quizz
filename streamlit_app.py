@@ -31,9 +31,21 @@ if 'timer' not in st.session_state:
 
 # --- QUESTIONS ---
 quiz_data = [
-    {"q": "Quelle est la capitale de l'Islande ?", "a": ["Oslo", "Reykjavik", "Helsinki"], "c": "Reykjavik"},
-    {"q": "Combien de coeurs a une pieuvre ?", "a": ["1", "3", "8"], "c": "3"},
-    {"q": "Quel est le métal le plus cher ?", "a": ["Or", "Platine", "Rhodium"], "c": "Rhodium"}
+    {"q": "Quel pays a offert la Statue de la Liberté aux USA ?", "a": ["France", "Angleterre", "Allemagne"], "c": "France"},
+    {"q": "Quelle est la capitale du Portugal ?", "a": ["Madrid", "Lisbonne", "Porto"], "c": "Lisbonne"},
+    {"q": "Quel film a pour héros un petit poisson clown ?", "a": ["Le Monde de Nemo", "Gang de Requins", "La Petite Sirène"], "c": "Le Monde de Nemo"},
+    {"q": "Combien de pattes ont les araignées ?", "a": ["6 pattes", "8 pattes", "10 pattes"], "c": "8 pattes"},
+    {"q": "Qui est l'auteur de Harry Potter ?", "a": ["J.R.R. Tolkien", "J.K. Rowling", "George R.R. Martin"], "c": "J.K. Rowling"},
+    {"q": "Quel est le plus grand océan du monde ?", "a": ["Atlantique", "Indien", "Pacifique"], "c": "Pacifique"},
+    {"q": "Quelle est la couleur du cheval blanc d'Henri IV ?", "a": ["Noir", "Blanc", "Gris"], "c": "Blanc"},
+    {"q": "Dans quel sport utilise-t-on un 'palet' ?", "a": ["Rugby", "Hockey sur glace", "Golf"], "c": "Hockey sur glace"},
+    {"q": "Quelle est la monnaie utilisée au Japon ?", "a": ["Le Yuan", "Le Won", "Le Yen"], "c": "Le Yen"},
+    {"q": "Comment s'appelle le cri du cochon ?", "a": ["Il grogne", "Il glousse", "Il braie"], "c": "Il grogne"},
+    {"q": "Quel est l'organe qui permet de respirer ?", "a": ["Le Foie", "Les Poumons", "L'Estomac"], "c": "Les Poumons"},
+    {"q": "Quelle planète est la plus proche du Soleil ?", "a": ["Mercure", "Vénus", "Mars"], "c": "Mercure"},
+    {"q": "Quel super-héros porte un costume de chauve-souris ?", "a": ["Superman", "Spider-Man", "Batman"], "c": "Batman"},
+    {"q": "Quelle est la langue la plus parlée au Brésil ?", "a": ["Espagnol", "Portugais", "Anglais"], "c": "Portugais"},
+    {"q": "En quelle année a eu lieu la chute du mur de Berlin ?", "a": ["1985", "1989", "1991"], "c": "1989"}
 ]
 
 st.title("⚡ Quiz Challenge")
