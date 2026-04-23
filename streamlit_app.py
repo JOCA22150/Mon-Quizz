@@ -11,11 +11,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Mémoire commune pour les 3 joueurs
 if 'global_scores' not in st.session_state:
     st.session_state.global_scores = {}
-
-# Variables par joueur
 if 'question_index' not in st.session_state:
     st.session_state.question_index = 0
 if 'my_score' not in st.session_state:
@@ -23,7 +20,7 @@ if 'my_score' not in st.session_state:
 if 'pseudo' not in st.session_state:
     st.session_state.pseudo = ""
 
-# --- TES QUESTIONS ---
+# --- QUESTIONS ---
 quiz_data = [
     {"q": "Qui a peint la Joconde ?", "a": ["Van Gogh", "Picasso", "Léonard de Vinci"], "c": "Léonard de Vinci"},
     {"q": "Quelle est la capitale de l'Islande ?", "a": ["Oslo", "Reykjavik", "Helsinki"], "c": "Reykjavik"},
@@ -32,7 +29,6 @@ quiz_data = [
 
 st.title("🏆 Le Quiz de la Soirée")
 
-# ETAPE 1 : CHOIX DU NOM
 if st.session_state.pseudo == "":
     st.write("### 👋 Salut ! Entrez votre pseudo :")
     nom = st.text_input("", placeholder="Ton prénom ici...")
@@ -41,12 +37,10 @@ if st.session_state.pseudo == "":
             st.session_state.pseudo = nom
             st.rerun()
 else:
-    # ETAPE 2 : LE QUIZ
     if st.session_state.question_index < len(quiz_data):
         current_q = quiz_data[st.session_state.question_index]
         st.write(f"Joueur : **{st.session_state.pseudo}**")
         st.progress(st.session_state.question_index / len(quiz_data))
-        
         st.info(f"Question {st.session_state.question_index + 1} : {current_q['q']}")
 
         for option in current_q['a']:
@@ -58,24 +52,21 @@ else:
                     st.toast("Raté... ❌")
                 st.session_state.question_index += 1
                 st.rerun()
-
-    # ETAPE 3 : FIN ET MUSIQUE
     else:
-        # On enregistre le score
         st.session_state.global_scores[st.session_state.pseudo] = st.session_state.my_score
-        
         st.balloons()
         st.header("🏁 C'est fini !")
         
-        # MUSIQUE DE VICTOIRE (Intégrée via un lien public pour éviter l'upload)
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
-        st.caption("🎶 Petite musique pour fêter ça !")
+        # --- ASTUCE AUTO-PLAY ---
+        # On utilise un petit bout de code invisible qui force la lecture
+        audio_url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        st.markdown(f'<audio src="{audio_url}" autoplay="true"></audio>', unsafe_allow_html=True)
+        st.write("🎶 *La musique de victoire se lance...*")
 
         st.markdown(f"<div class='score-box'><h2>Ton score final : {st.session_state.my_score} / {len(quiz_data)}</h2></div>", unsafe_allow_html=True)
         
         st.write("---")
         st.subheader("📊 Classement en direct")
-        
         if st.session_state.global_scores:
             df = pd.DataFrame(st.session_state.global_scores.items(), columns=['Joueur', 'Points'])
             df = df.sort_values(by='Points', ascending=False)
